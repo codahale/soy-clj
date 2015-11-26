@@ -1,5 +1,7 @@
 # soy-clj
 
+![Build Status](https://travis-ci.org/codahale/soy-clj.svg)
+
 An idiomatic Clojure wrapper for Google's Closure templating system.
 
 ## Usage
