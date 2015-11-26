@@ -53,3 +53,23 @@
    alert(1);
   </script>
 {/template}
+
+/**
+ * A simple template for benchmarking.
+ *  @param bar a thingy
+ */
+{template .basic autoescape="strict" kind="html"}
+  <span class="foo">{$bar}</span>
+{/template}
+
+/**
+ * A list template for benchmarking.
+ *  @param items the items in the list
+ */
+{template .list autoescape="strict" kind="html"}
+  <ul>
+    {foreach $item in $items}
+      <li>{$item}</li>
+    {/foreach}
+  </ul>
+{/template}
