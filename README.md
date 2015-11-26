@@ -4,7 +4,7 @@ An idiomatic Clojure wrapper for Google's Closure templating system.
 
 ## Usage
 
-```closure
+```clojure
 (require '[soy-clj.core :as soy])
 
 ;; parse a set of template files from ./resources
