@@ -10,4 +10,6 @@
   :plugins [[codox "0.9.0"]]
   :test-selectors {:default #(not-any? % [:bench])
                    :bench   :bench}
-  :aliases {"bench" ["test" ":bench"]})
+  :aliases {"bench" ["test" ":bench"]}
+  :deploy-repositories [["releases" :clojars]
+                        ["snapshots" :clojars]])
