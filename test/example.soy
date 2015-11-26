@@ -1,0 +1,55 @@
+{namespace examples.simple}
+
+/**
+ * Says hello to the world.
+ */
+{template .helloWorld autoescape="strict" kind="html"}
+  Hello world!
+{/template}
+
+/**
+ * Greets a person using "Hello" by default.
+ * @param name The name of the person.
+ * @param? greetingWord Optional greeting word to use instead of "Hello".
+ */
+{template .helloName autoescape="strict" kind="html"}
+  <p>
+    <a href="/welcome?name={$name}">Welcome</a>
+    {if not $greetingWord}
+      Hello {$name}!
+    {else}
+      {$greetingWord} {$name}!
+    {/if}
+  </p>
+{/template}
+
+/**
+ * Greets a person and optionally a list of other people.
+ * @param name The name of the person.
+ * @param additionalNames The additional names to greet. May be an empty list.
+ */
+{template .helloNames autoescape="strict" kind="html"}
+  // Greet the person.
+  {call .helloName data="all" /}<br>
+  // Greet the additional people.
+  {foreach $additionalName in $additionalNames}
+    {call .helloName}
+      {param name: $additionalName /}
+    {/call}
+    {if not isLast($additionalName)}
+      <br>  // break after every line except the last
+    {/if}
+  {ifempty}
+    No additional people to greet.
+  {/foreach}
+{/template}
+
+
+/**
+ * A block of Javascript that should have a CSP nonce injected.
+ */
+{template .autoNonce autoescape="strict" kind="html"}
+  <script type="text/javascript">
+   alert(1);
+  </script>
+{/template}
