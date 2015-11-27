@@ -32,9 +32,12 @@
   "Given the filename (or a vector of filenames) of a Closure template on the
   classpath, parses the templates and returns a compiled set of templates."
   [file-or-files]
-  (let [files (flatten (vector file-or-files))]
-    (swap! template-cache #(cache/through parse-uncached % files))
-    (get @template-cache files)))
+  (let [files (vec (flatten (vector file-or-files)))]
+    (if-let [found (cache/lookup @template-cache files)]
+      found
+      (let [templates (parse-uncached files)]
+        (swap! template-cache assoc files templates)
+        templates))))
 
 (defn- dash-split
   [s]
