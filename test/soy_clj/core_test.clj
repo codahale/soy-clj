@@ -11,9 +11,9 @@
     (is (not (cache/has? @@#'soy-clj/template-cache "example.soy")))
     (is (cache/has? @@#'soy-clj/template-cache ["example.soy"])))
 
-  (testing "Parsing a template without a cache"=
-           (is (parse "example.soy"))
-           (is (parse ["example.soy"]))))
+  (testing "Parsing a template without a cache"
+    (is (parse "example.soy"))
+    (is (parse ["example.soy"]))))
 
 (deftest render-test
   (testing "Rendering a template"
