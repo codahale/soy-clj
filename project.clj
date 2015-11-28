@@ -12,4 +12,5 @@
                    :bench   :bench}
   :aliases {"bench" ["test" ":bench"]}
   :deploy-repositories [["releases" :clojars]
-                        ["snapshots" :clojars]])
+                        ["snapshots" :clojars]]
+  :global-vars {*warn-on-reflection* true})
