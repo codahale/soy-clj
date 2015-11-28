@@ -15,6 +15,9 @@ An idiomatic Clojure wrapper for [Google's Closure templating system](https://de
 > interface. You can also use the built-in message support to easily localize
 > your applications.
 
+An example of what a Closure template looks like
+[can be found here](https://github.com/codahale/soy-clj/blob/master/test/example.soy).
+
 ### Security
 
 In addition, variables in Closure Templates are contextually escaped to almost
