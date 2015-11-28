@@ -16,8 +16,7 @@
   (atom (cache/lu-cache-factory {})))
 
 (defn set-cache
-  "Sets the cache for parsed templates. If set to `nil`, templates will be
-  parsed on each invocation of `build`."
+  "Sets the cache for parsed templates."
   [cache]
   (reset! template-cache cache))
 
@@ -32,7 +31,7 @@
     (.. builder (build) (compileToTofu))))
 
 (defn parse
-  "Given the filename (or a vector of filenames) of a Closure template on the
+  "Given the filename (or a sequence of filenames) of a Closure template on the
   classpath, parses the templates and returns a compiled set of templates."
   [file-or-files]
   (let [files (vec (flatten (vector file-or-files)))]
@@ -54,7 +53,6 @@
 (defn- camelize-keys
   ^java.util.Map [m]
   (let [f (fn [[k v]] (if (keyword? k) [(camel-case k) v] [k v]))]
-    ;; only apply to maps
     (walk/postwalk (fn [x] (if (map? x) (into {} (map f x)) x)) m)))
 
 (def ^:private content-kind
@@ -68,7 +66,7 @@
 (def ^:private content-kind-enum (set/map-invert content-kind))
 
 (defn render
-  "Given a compiled set of templates, renders the named template with the given
+  "Given a parsed set of templates, renders the named template with the given
   data and returns the result as a string as well as the _kind_ of data in the
   template (e.g. `:html`). Data keys of the form `:one-two` are converted into
   template variables of the form `oneTwo`."
