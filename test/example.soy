@@ -3,7 +3,7 @@
 /**
  * Says hello to the world.
  */
-{template .helloWorld autoescape="strict" kind="html"}
+{template .helloWorld kind="html"}
   Hello world!
 {/template}
 
@@ -12,7 +12,7 @@
  * @param name The name of the person.
  * @param? greetingWord Optional greeting word to use instead of "Hello".
  */
-{template .helloName autoescape="strict" kind="html"}
+{template .helloName kind="html"}
   <p>
     <a href="/welcome?name={$name}">Welcome</a>
     {if not $greetingWord}
@@ -28,7 +28,7 @@
  * @param name The name of the person.
  * @param additionalNames The additional names to greet. May be an empty list.
  */
-{template .helloNames autoescape="strict" kind="html"}
+{template .helloNames kind="html"}
   // Greet the person.
   {call .helloName data="all" /}<br>
   // Greet the additional people.
@@ -48,7 +48,7 @@
 /**
  * A block of Javascript that should have a CSP nonce injected.
  */
-{template .autoNonce autoescape="strict" kind="html"}
+{template .autoNonce kind="html"}
   <script type="text/javascript">
    alert(1);
   </script>
@@ -58,7 +58,7 @@
  * A simple template for benchmarking.
  *  @param bar a thingy
  */
-{template .basic autoescape="strict" kind="html"}
+{template .basic kind="html"}
   <span class="foo">{$bar}</span>
 {/template}
 
@@ -66,7 +66,7 @@
  * A list template for benchmarking.
  *  @param items the items in the list
  */
-{template .list autoescape="strict" kind="html"}
+{template .list kind="html"}
   <ul>
     {foreach $item in $items}
       <li>{$item}</li>
