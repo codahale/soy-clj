@@ -105,16 +105,16 @@ templates (e.g. a typo) from starting up successfully.
 ```clojure
 (require '[soy-clj.core :as soy])
 
-;; parse a set of template files from ./resources
+;;; parse a set of template files from ./resources
 (def web-templates (soy-clj.core/parse ["marketing.soy" "main.soy"]))
 
-;; render a template
+;;; render a template
 (let [[content kind] (soy-clj.core/render web-templates
                                           "com.example.marketing.newSplash"
                                           {:title "Hello World"
                                            :good-stuff ["Puppies" "Kitties"]})]
   (prn content) ; the rendered template as a string
-  (prn kind)) ; a symbol indicating the template's type (e.g. :html, :js, :css)
+  (prn kind))   ; a symbol indicating the template's type (e.g. :html, :js, :css)
 ```
 
 ## License
