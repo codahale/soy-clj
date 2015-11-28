@@ -23,6 +23,13 @@
            (render (parse "example.soy") "examples.simple.helloName"
                    {:name "Mr. World"
                     :greeting-word "Bonjour"}))))
+  (testing "Contextually auto-escaping"
+    (is (= [(str "<a href=\"#\" onclick=\"setName('\\x27, "
+                 "alert(\\x27XSS\\x27), \\x27')\">&#39;, "
+                 "alert(&#39;XSS&#39;), &#39;</a>")
+            :html]
+           (render (parse "example.soy") "examples.simple.example"
+                   {:name "', alert('XSS'), '"}))))
   (testing "Passing complex structures to nested templates"
     (is (= [(str "<p><a href=\"/welcome?name=Alice\">Welcome</a>"
                  "Hello Alice!</p><br><p><a href=\"/welcome?name=Bob\">"

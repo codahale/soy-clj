@@ -25,21 +25,43 @@ entirely prevent XSS attacks. For example, consider the following template
 snippet:
 
 ```html
-<a href="/people/{$name}">{$name}</a>
+<a href="#" onclick="setName('{$name}')">{$name}</a>
 ```
 
-The second use of `name` is as HTML text, but the first use is inside an
-element's attribute. If the value of `name` is `Ben Franklin`, your template
-will render as follows:
+The first use of `name` is as a Javascript string inside a HTML attribute; the
+second use is as the content of an HTML element. These two contexts have very
+different syntactic requirements, which is what makes preventing XSS attacks so
+hard.
+
+An attacker, seeing this contextual nesting, could rename her profile to
+something like `', alert('XSS'), '`. A naive templating system will auto-escape
+everything as if it's the content of an HTML element:
 
 ```html
-<a href="/people/Ben%20Franklin">Ben Franklin</a>
+<a href="#" onclick="setName('&#39;, alert(&#39;XSS&#39;), &#39;')">&#39;, alert(&#39;XSS&#39;), &#39;</a>
 ```
 
-Closure templates will automatically escape based on the context of the variable
-usage, which allows developers to nest CSS in Javascript in HTML in Javascript
-(etc. etc.) without needing to keep track of the context-specific syntax rules
-and their interaction effects.
+Because the browser parses HTML entities *before* parsing the Javascript,
+though, this is structurally equivalent to the following:
+
+```html
+<a href="#" onclick="setName('', alert('XSS'), '')">', alert('XSS'), '</a>
+```
+
+The attacker, then, can run arbitrary Javascript when someone clicks that link.
+
+Closure templates, on the other hand, will automatically escape based on the
+context of the variable usage:
+
+```html
+<a href="#" onclick="setName('\x27, alert(\x27XSS\x27), \x27')">&#39;, alert(&#39;XSS&#39;), &#39;</a>
+```
+
+This allows developers to nest CSS in Javascript in HTML in Javascript (etc.
+etc.) without needing to keep track of the context-specific syntax rules and
+their interaction effects. For more information on the security model behind
+Closure templates,
+[read this](http://js-quasis-libraries-and-repl.googlecode.com/svn/trunk/safetemplate.html).
 
 `soy-clj` is hard-coded to only render strictly-escaped templates. If you
 _absolutely_ must poke a hole in that, use the `ordain-as-safe` function to

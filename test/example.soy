@@ -1,6 +1,14 @@
 {namespace examples.simple}
 
 /**
+ * An example of contextual escaping.
+ * @param name The name of a person.
+ */
+{template .example kind="html"}
+  <a href="#" onclick="setName('{$name}')">{$name}</a>
+{/template}
+
+/**
  * Says hello to the world.
  */
 {template .helloWorld kind="html"}
@@ -43,7 +51,6 @@
     No additional people to greet.
   {/foreach}
 {/template}
-
 
 /**
  * A block of Javascript that should have a CSP nonce injected.
