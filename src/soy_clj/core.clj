@@ -5,10 +5,11 @@
             [clojure.set :as set]
             [clojure.string :as string]
             [clojure.walk :as walk])
-  (:import (com.google.template.soy SoyFileSet)
+  (:import (com.google.template.soy SoyFileSet SoyFileSet$Builder)
            (com.google.template.soy.data SanitizedContent$ContentKind
                                          UnsafeSanitizedContentOrdainer)
-           (com.google.template.soy.shared SoyGeneralOptions)))
+           (com.google.template.soy.shared SoyGeneralOptions)
+           (com.google.template.soy.tofu SoyTofu)))
 
 (def ^:private template-cache
   "Default to keeping the 32 most-used templates in cache."
@@ -22,7 +23,9 @@
 
 (defn- parse-uncached
   [files]
-  (let [builder (reduce #(.add %1 (io/resource %2)) (SoyFileSet/builder) files)
+  (let [^SoyFileSet$Builder builder
+        (reduce #(.add ^SoyFileSet$Builder %1 (io/resource %2))
+                (SoyFileSet/builder) files)
         opts (SoyGeneralOptions.)]
     (.setStrictAutoescapingRequired opts true)
     (.setGeneralOptions builder opts)
@@ -49,7 +52,7 @@
     (string/join (cons (string/lower-case (first uc)) (next uc)))))
 
 (defn- camelize-keys
-  [m]
+  ^java.util.Map [m]
   (let [f (fn [[k v]] (if (keyword? k) [(camel-case k) v] [k v]))]
     ;; only apply to maps
     (walk/postwalk (fn [x] (if (map? x) (into {} (map f x)) x)) m)))
@@ -69,7 +72,7 @@
   data and returns the result as a string as well as the _kind_ of data in the
   template (e.g. `:html`). Data keys of the form `:one-two` are converted into
   template variables of the form `oneTwo`."
-  [templates template-name data]
+  [^SoyTofu templates ^String template-name data]
   (let [content (.. templates
                     (newRenderer template-name)
                     (setData (camelize-keys data))
