@@ -46,7 +46,9 @@ ordain bits of content as safe in a given context.
 
 Google Closure templates are compiled to actual bytecode, making them incredibly
 fast. Rendering a list of 1000 elements, for example, takes ~450µs on a laptop.
-A simple template with a single variable takes ~5µs.
+A simple template with a single variable takes ~5µs. To reproduce this, run any
+of the [criterium](https://github.com/hugoduncan/criterium) benchmarks in
+`soy-clj/bench-test` or run `lein bench` on the command line.
 
 `soy-clj` uses `core.cache` to cache compiled templates. By default it retains
 the 32 most-used templates in memory, which makes for fast rendering in
