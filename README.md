@@ -22,7 +22,7 @@ entirely prevent XSS attacks. For example, consider the following template
 snippet:
 
 ```html
-<a href="/people/${name}">{$name}</a>
+<a href="/people/{$name}">{$name}</a>
 ```
 
 The second use of `name` is as HTML text, but the first use is inside an
