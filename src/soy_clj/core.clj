@@ -23,7 +23,7 @@
 (defn- parse-uncached
   [files]
   (let [^SoyFileSet$Builder builder
-        (reduce #(.add ^SoyFileSet$Builder %1 (io/resource %2))
+        (reduce #(.add ^SoyFileSet$Builder %1 (io/file (io/resource %2)))
                 (SoyFileSet/builder) files)
         opts (SoyGeneralOptions.)]
     (.setStrictAutoescapingRequired opts true)
