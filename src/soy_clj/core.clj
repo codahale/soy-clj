@@ -76,8 +76,7 @@
                     (newRenderer template-name)
                     (setData (camelize-keys data))
                     (renderStrict))]
-    [(.getContent content)
-     (content-kind (.getContentKind content))]))
+    [(.getContent content) (content-kind (.getContentKind content))]))
 
 (defn ordain-as-safe
   "Ordains the given content as safe content of the given kind which will not be
