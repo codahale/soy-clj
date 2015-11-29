@@ -20,13 +20,14 @@
   [cache]
   (reset! template-cache cache))
 
+(def ^:private opts
+  (doto (SoyGeneralOptions.)
+    (.setStrictAutoescapingRequired true)))
+
 (defn- parse-uncached
   [files]
-  (let [^SoyFileSet$Builder builder
-        (reduce #(.add ^SoyFileSet$Builder %1 (io/file (io/resource %2)))
-                (SoyFileSet/builder) files)
-        opts (SoyGeneralOptions.)]
-    (.setStrictAutoescapingRequired opts true)
+  (let [builder (SoyFileSet/builder)]
+    (run! #(.add builder (io/file (io/resource %))) files)
     (.setGeneralOptions builder opts)
     (.. builder (build) (compileToTofu))))
 
