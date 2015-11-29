@@ -3,6 +3,13 @@
             [clojure.test :refer :all]
             [soy-clj.core :refer :all :as soy-clj]))
 
+(deftest content-type-test
+  (testing "The content types of various kinds"
+    (is (= "text/css; charset=utf-8" (content-type :css)))
+    (is (= "text/html; charset=utf-8" (content-type :html)))
+    (is (= "text/javascript; charset=utf-8" (content-type :js)))
+    (is (= "text/plain; charset=utf-8" (content-type :some-other-kind)))))
+
 (deftest parse-test
   (testing "Parsing a template without a cache"
     (set-cache (cache/lu-cache-factory {}))

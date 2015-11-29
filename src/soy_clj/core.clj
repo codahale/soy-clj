@@ -56,6 +56,15 @@
   (let [f (fn [[k v]] (if (keyword? k) [(camel-case k) v] [k v]))]
     (walk/postwalk (fn [x] (if (map? x) (into {} (map f x)) x)) m)))
 
+(defn content-type
+  "The MIME content-type of the given kind."
+  [kind]
+  (case kind
+    :css "text/css; charset=utf-8"
+    :html "text/html; charset=utf-8"
+    :js "text/javascript; charset=utf-8"
+    "text/plain; charset=utf-8"))
+
 (def ^:private content-kind
   {SanitizedContent$ContentKind/ATTRIBUTES :attributes
    SanitizedContent$ContentKind/CSS :css
