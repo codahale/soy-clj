@@ -42,14 +42,11 @@
         (swap! template-cache assoc files templates)
         templates))))
 
-(defn- dash-split
-  [s]
-  (string/split (name s) #"-"))
-
 (defn- camel-case
   [s]
-  (let [uc (->> s (dash-split) (map string/capitalize) (string/join) (vec))]
-    (string/join (cons (string/lower-case (first uc)) (next uc)))))
+  (let [ss (string/split (name s) #"-")]
+    (string/join (cons (string/lower-case (first ss))
+                       (map string/capitalize (next ss))))))
 
 (defn- camelize-keys
   ^java.util.Map [m]
