@@ -71,7 +71,7 @@ ordain bits of content as safe in a given context.
 
 Google Closure templates are compiled to actual bytecode, making them incredibly
 fast. Rendering a list of 1000 elements, for example, takes ~450µs on a laptop.
-A simple template with a single variable takes ~5µs. To reproduce this, run any
+A simple template with a single variable takes ~4µs. To reproduce this, run any
 of the [criterium](https://github.com/hugoduncan/criterium) benchmarks in
 `soy-clj/bench-test` or run `lein bench` on the command line.
 
@@ -85,8 +85,8 @@ every request:
 (soy-clj.core/set-cache (clojure.core.cache/ttl-cache-factory {} :ttl 0))
 ```
 
-Parsing and compiling the templates takes 10-100ms, which makes using live
-templates in development painless.
+Parsing and compiling templates takes 10-100ms, which makes using live templates
+in development relatively painless.
 
 To avoid a slow load on the first request, applications can pre-parse template
 files on startup:
@@ -114,7 +114,10 @@ templates (e.g. a typo) from starting up successfully.
                                           {:title "Hello World"
                                            :good-stuff ["Puppies" "Kitties"]})]
   (prn content) ; the rendered template as a string
-  (prn kind))   ; a symbol indicating the template's type (e.g. :html, :js, :css)
+  (prn kind)    ; a symbol indicating the template's type (e.g. :html, :js, :css)
+
+  ;; the MIME content type of the kind of template
+  (prn (soy-clj.core/content-type kind)))
 ```
 
 ## License
