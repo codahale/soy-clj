@@ -21,10 +21,12 @@
   (reset! template-cache cache))
 
 (def ^:private opts
+  "Default to requiring autoescaped templates."
   (doto (SoyGeneralOptions.)
     (.setStrictAutoescapingRequired true)))
 
 (defn- parse-uncached
+  "Returns a compiled set of templates from the given files."
   [files]
   (let [builder (SoyFileSet/builder)]
     (run! #(.add builder (io/file (io/resource %))) files)
@@ -43,12 +45,15 @@
         templates))))
 
 (defn- camel-case
+  "Converts a symbol like `:blah-blah` into a string like `blahBlah`."
   [s]
   (let [ss (string/split (name s) #"-")]
     (string/join (cons (string/lower-case (first ss))
                        (map string/capitalize (next ss))))))
 
 (defn- camelize-keys
+  "Recursively transforms a map, converting all keyword keys into camel-case
+  strings."
   ^java.util.Map [m]
   (let [f (fn [[k v]] (if (keyword? k) [(camel-case k) v] [k v]))]
     (walk/postwalk (fn [x] (if (map? x) (into {} (map f x)) x)) m)))
@@ -63,6 +68,7 @@
     "text/plain; charset=utf-8"))
 
 (def ^:private content-kind
+  "A map of ContentKind enums to happy little symbols."
   {SanitizedContent$ContentKind/ATTRIBUTES :attributes
    SanitizedContent$ContentKind/CSS :css
    SanitizedContent$ContentKind/HTML :html
@@ -70,7 +76,9 @@
    SanitizedContent$ContentKind/TEXT :text
    SanitizedContent$ContentKind/URI :uri})
 
-(def ^:private content-kind-enum (set/map-invert content-kind))
+(def ^:private content-kind-enum
+  "A map of happy little symbols to ContentKind enums."
+  (set/map-invert content-kind))
 
 (defn render
   "Given a parsed set of templates, renders the named template with the given
