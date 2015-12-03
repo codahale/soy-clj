@@ -100,6 +100,41 @@ files on startup:
 This has the additional benefit of preventing an application with malformed
 templates (e.g. a typo) from starting up successfully.
 
+### Gotchas
+
+There are a few quirks of working with Google Closure templates.
+
+#### Curly Brackets
+
+Curly brackets (i.e. `{` and `}`) are used _exclusively_ for template directives
+(e.g. `{$name}` or `{if}`). If you need to use a curly bracket in your template,
+use the `{lb}` or `{rb}` directives.
+
+You can also enclose parts of your template with the `{literal}` directive:
+
+```html
+<script type="text/javascript">
+ var name = "{$name}"; // automatically escaped
+ {literal}
+ function blah() {
+   console.log(name);
+ }
+ {/literal}
+</script>
+```
+
+#### Whitespace
+
+Google Closure templates normalizes template text with something it calls
+[line joining](https://developers.google.com/closure/templates/docs/concepts#linejoining).
+You may notice this when it removes whitespace in your template that is
+semantically meaningful (e.g. the space in `<i>foo</i> <i>bar</i>`). You can add
+explicit whitespace using the `{sp}` directive:
+
+```html
+<i>foo</i>{sp}<i>bar</i>
+```
+
 ## Usage
 
 ```clojure
