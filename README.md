@@ -67,6 +67,10 @@ Closure templates,
 _absolutely_ must poke a hole in that, use the `ordain-as-safe` function to
 ordain bits of content as safe in a given context.
 
+If you have user input which must support some HTML markup for formatting
+purposes, use the `clean-html` function to pass all HTML tags through a strict
+whitelist.
+
 ### Performance
 
 Google Closure templates are compiled to actual bytecode, making them incredibly
