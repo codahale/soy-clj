@@ -10,6 +10,15 @@
     (is (= "text/javascript; charset=utf-8" (content-type :js)))
     (is (= "text/plain; charset=utf-8" (content-type :some-other-kind)))))
 
+(deftest clean-html-test
+  (testing "Cleaning an HTML string"
+    (is (= (ordain-as-safe "<em>woo</em> woo();" :html)
+           (clean-html "<em>woo</em> <li>woo();</li>"))))
+
+  (testing "Cleaning an HTML string with optional safe tags"
+    (is (= (ordain-as-safe "<em>woo</em> <span>woo();</span>" :html)
+           (clean-html "<em>woo</em> <span>woo();</span>" :span)))))
+
 (deftest parse-test
   (testing "Parsing a template without a cache"
     (set-cache (cache/lu-cache-factory {}))

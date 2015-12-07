@@ -9,6 +9,8 @@
            (com.google.template.soy.data SanitizedContent$ContentKind
                                          UnsafeSanitizedContentOrdainer)
            (com.google.template.soy.shared SoyGeneralOptions)
+           (com.google.template.soy.shared.restricted Sanitizers
+                                                      TagWhitelist$OptionalSafeTag)
            (com.google.template.soy.tofu SoyTofu)))
 
 (def ^:private template-cache
@@ -99,3 +101,14 @@
   [content kind]
   (UnsafeSanitizedContentOrdainer/ordainAsSafe content
                                                (content-kind-enum kind)))
+
+(defn clean-html
+  "Parses the given string as HTML and removes all tags except for basic
+  formatting tags: `<b>`, `<br>`, `<em>`, `<i>`, `<s>`, `<sub>`, `<sup>`,
+  `<u>`. Additionally, the use of `<ul>`, `<ol>`, `<li>`, and `<span>` can be
+  enabled by passing the symbols `:ul` etc. as additional arguments."
+  [^String s & safe-tags]
+  (prn )
+  (Sanitizers/cleanHtml s ^java.util.Collection
+                        (vec (map #(TagWhitelist$OptionalSafeTag/fromTagName
+                                    (name %)) safe-tags))))
