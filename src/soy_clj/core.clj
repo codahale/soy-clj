@@ -31,7 +31,7 @@
   "Returns a compiled set of templates from the given files."
   [files]
   (let [builder (SoyFileSet/builder)]
-    (run! #(.add builder (io/file (io/resource %))) files)
+    (run! #(.add builder (io/resource %) ^String %) files)
     (.setGeneralOptions builder opts)
     (.. builder (build) (compileToTofu))))
 
