@@ -19,6 +19,11 @@
     (is (= (ordain-as-safe "<em>woo</em> <span>woo();</span>" :html)
            (clean-html "<em>woo</em> <span>woo();</span>" :span)))))
 
+(deftest compile-to-js-test
+  (testing "Compiling templates to Javascript"
+    (is (= (slurp "test/example.js")
+           (compile-to-js "example.soy")))))
+
 (deftest parse-test
   (testing "Parsing a template without a cache"
     (set-cache (cache/lu-cache-factory {}))

@@ -144,6 +144,9 @@ explicit whitespace using the `{sp}` directive:
 ```clojure
 (require '[soy-clj.core :as soy])
 
+;;; compile a set of template files to Javascript
+(def js (soy/compile-to-js ["marketing.soy" "main.soy"]))
+
 ;;; parse a set of template files from ./resources
 (def web-templates (soy/parse ["marketing.soy" "main.soy"]))
 

@@ -5,9 +5,10 @@
             [clojure.set :as set]
             [clojure.string :as string]
             [clojure.walk :as walk])
-  (:import (com.google.template.soy SoyFileSet SoyFileSet$Builder)
+  (:import (com.google.template.soy SoyFileSet)
            (com.google.template.soy.data SanitizedContent$ContentKind
                                          UnsafeSanitizedContentOrdainer)
+           (com.google.template.soy.jssrc SoyJsSrcOptions)
            (com.google.template.soy.shared SoyGeneralOptions)
            (com.google.template.soy.shared.restricted Sanitizers
                                                       TagWhitelist$OptionalSafeTag)
@@ -27,13 +28,29 @@
   (doto (SoyGeneralOptions.)
     (.setStrictAutoescapingRequired true)))
 
-(defn- parse-uncached
-  "Returns a compiled set of templates from the given files."
+(def ^:private js-opts
+  "Use only the defaults for JS compilation."
+  (SoyJsSrcOptions.))
+
+(defn- ^SoyFileSet build
+  "Builds a fileset from the given files."
   [files]
   (let [builder (SoyFileSet/builder)]
     (run! #(.add builder (io/resource %) ^String %) files)
     (.setGeneralOptions builder opts)
-    (.. builder (build) (compileToTofu))))
+    (.build builder)))
+
+(defn compile-to-js
+  "Compile the given set of templates to Javascript."
+  [file-or-files]
+  (->> (.compileToJsSrc (build (flatten (vector file-or-files))) js-opts nil)
+       (cons "if(typeof goog == 'undefined') {var goog = {};}")
+       (string/join "\n")))
+
+(defn- parse-uncached
+  "Returns a compiled set of templates from the given files."
+  [files]
+  (.. (build files) (compileToTofu)))
 
 (defn parse
   "Given the filename (or a sequence of filenames) of a Closure template on the
