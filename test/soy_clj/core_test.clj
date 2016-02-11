@@ -20,6 +20,10 @@
            (clean-html "<em>woo</em> <span>woo();</span>" :span)))))
 
 (deftest compile-to-js-test
+  (testing "Compiling a missing template to Javascript"
+    (is (thrown? IllegalArgumentException
+                 (compile-to-js "bad.soy"))))
+
   (testing "Compiling templates to Javascript"
     (is (= (slurp "test/example.js")
            (compile-to-js "example.soy")))))

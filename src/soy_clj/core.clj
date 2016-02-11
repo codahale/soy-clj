@@ -5,7 +5,7 @@
             [clojure.set :as set]
             [clojure.string :as string]
             [clojure.walk :as walk])
-  (:import (com.google.template.soy SoyFileSet)
+  (:import (com.google.template.soy SoyFileSet SoyFileSet$Builder)
            (com.google.template.soy.data SanitizedContent$ContentKind
                                          UnsafeSanitizedContentOrdainer)
            (com.google.template.soy.jssrc SoyJsSrcOptions)
@@ -32,11 +32,17 @@
   "Use only the defaults for JS compilation."
   (SoyJsSrcOptions.))
 
+(defn- add-file
+  [^SoyFileSet$Builder builder ^String file]
+  (if-let [res (io/resource file)]
+    (.add  builder res file)
+    (throw (IllegalArgumentException. (str "Unable to open " file)))))
+
 (defn- ^SoyFileSet build
   "Builds a fileset from the given files."
   [files]
   (let [builder (SoyFileSet/builder)]
-    (run! #(.add builder (io/resource %) ^String %) files)
+    (run! (partial add-file builder) files)
     (.setGeneralOptions builder opts)
     (.build builder)))
 
