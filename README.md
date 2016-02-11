@@ -145,23 +145,23 @@ explicit whitespace using the `{sp}` directive:
 (require '[soy-clj.core :as soy])
 
 ;;; parse a set of template files from ./resources
-(def web-templates (soy-clj.core/parse ["marketing.soy" "main.soy"]))
+(def web-templates (soy/parse ["marketing.soy" "main.soy"]))
 
 ;;; render a template
-(let [[content kind] (soy-clj.core/render web-templates
-                                          "com.example.marketing.newSplash"
-                                          {:title "Hello World"
-                                           :good-stuff ["Puppies" "Kitties"]})]
+(let [[content kind] (soy/render web-templates
+                                 "com.example.marketing.newSplash"
+                                 {:title "Hello World"
+                                  :good-stuff ["Puppies" "Kitties"]})]
   (prn content) ; the rendered template as a string
-  (prn kind)    ; a symbol indicating the template's type (e.g. :html, :js, :css)
+  (prn kind)    ; a symbol indicating the template's type (e.g. :html, :js, etc)
 
   ;; the MIME content type of the kind of template
-  (prn (soy-clj.core/content-type kind)))
+  (prn (soy/content-type kind)))
 ```
 
 ## License
 
-Copyright © 2015 Coda Hale
+Copyright © 2015-2016 Coda Hale
 
 Distributed under the Eclipse Public License either version 1.0 or (at your
 option) any later version.
