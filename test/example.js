@@ -19,6 +19,14 @@ if (goog.DEBUG) {
 }
 
 
+examples.simple.exampleText = function(opt_data, opt_ignored) {
+  return soydata.markUnsanitizedText('Hello, ' + ('' + opt_data.name) + '!');
+};
+if (goog.DEBUG) {
+  examples.simple.exampleText.soyTemplateName = 'examples.simple.exampleText';
+}
+
+
 examples.simple.helloWorld = function(opt_data, opt_ignored) {
   return soydata.VERY_UNSAFE.ordainSanitizedHtml('Hello world!');
 };
@@ -37,12 +45,12 @@ if (goog.DEBUG) {
 
 examples.simple.helloNames = function(opt_data, opt_ignored) {
   var output = examples.simple.helloName(opt_data) + '<br>';
-  var additionalNameList34 = opt_data.additionalNames;
-  var additionalNameListLen34 = additionalNameList34.length;
-  if (additionalNameListLen34 > 0) {
-    for (var additionalNameIndex34 = 0; additionalNameIndex34 < additionalNameListLen34; additionalNameIndex34++) {
-      var additionalNameData34 = additionalNameList34[additionalNameIndex34];
-      output += examples.simple.helloName({name: additionalNameData34}) + ((! (additionalNameIndex34 == additionalNameListLen34 - 1)) ? '<br>' : '');
+  var additionalNameList38 = opt_data.additionalNames;
+  var additionalNameListLen38 = additionalNameList38.length;
+  if (additionalNameListLen38 > 0) {
+    for (var additionalNameIndex38 = 0; additionalNameIndex38 < additionalNameListLen38; additionalNameIndex38++) {
+      var additionalNameData38 = additionalNameList38[additionalNameIndex38];
+      output += examples.simple.helloName({name: additionalNameData38}) + ((! (additionalNameIndex38 == additionalNameListLen38 - 1)) ? '<br>' : '');
     }
   } else {
     output += 'No additional people to greet.';
@@ -72,11 +80,11 @@ if (goog.DEBUG) {
 
 examples.simple.list = function(opt_data, opt_ignored) {
   var output = '<ul>';
-  var itemList48 = opt_data.items;
-  var itemListLen48 = itemList48.length;
-  for (var itemIndex48 = 0; itemIndex48 < itemListLen48; itemIndex48++) {
-    var itemData48 = itemList48[itemIndex48];
-    output += '<li>' + soy.$$escapeHtml(itemData48) + '</li>';
+  var itemList52 = opt_data.items;
+  var itemListLen52 = itemList52.length;
+  for (var itemIndex52 = 0; itemIndex52 < itemListLen52; itemIndex52++) {
+    var itemData52 = itemList52[itemIndex52];
+    output += '<li>' + soy.$$escapeHtml(itemData52) + '</li>';
   }
   output += '</ul>';
   return soydata.VERY_UNSAFE.ordainSanitizedHtml(output);

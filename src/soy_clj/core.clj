@@ -109,10 +109,12 @@
   "Given a parsed set of templates, renders the named template with the given
   data and returns the result as a string as well as the _kind_ of data in the
   template (e.g. `:html`). Data keys of the form `:one-two` are converted into
-  template variables of the form `oneTwo`."
-  [^SoyTofu templates ^String template-name data]
+  template variables of the form `oneTwo`. Optionally, an expected kind may be
+  passed. If none is given, `:html` is assumed."
+  [^SoyTofu templates ^String template-name data & [kind]]
   (let [content (.. templates
                     (newRenderer template-name)
+                    (setContentKind (content-kind-enum (or kind :html)))
                     (setData (camelize-keys data))
                     (renderStrict))]
     [(.getContent content) (content-kind (.getContentKind content))]))

@@ -48,6 +48,12 @@
            (render (parse "example.soy") "examples.simple.helloName"
                    {:name "Mr. World"
                     :greeting-word "Bonjour"}))))
+  (testing "Rendering a text template"
+    (is (= ["Hello, Mr. World!"
+            :text]
+           (render (parse "example.soy") "examples.simple.exampleText"
+                   {:name "Mr. World"}
+                   :text))))
   (testing "Contextually auto-escaping"
     (is (= [(str "<a href=\"#\" onclick=\"setName('\\x27, "
                  "alert(\\x27XSS\\x27), \\x27')\">&#39;, "
