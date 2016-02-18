@@ -1,5 +1,6 @@
 (ns soy-clj.core-test
   (:require [clojure.core.cache :as cache]
+            [clojure.string :as string]
             [clojure.test :refer :all]
             [soy-clj.core :refer :all :as soy-clj]))
 
@@ -27,6 +28,21 @@
   (testing "Compiling templates to Javascript"
     (is (= (slurp "test/example.js")
            (compile-to-js "example.soy")))))
+
+(deftest parse-string-test
+  (testing "Parsing a string"
+    (let [templates (parse-string (string/join "\n"
+                                               ["{namespace example}"
+                                                "/**"
+                                                " * Does a thing."
+                                                " * @param name A name"
+                                                " */"
+                                                "{template .test kind=\"html\"}"
+                                                "<b>{$name}</b>"
+                                                "{/template}"])
+                                  "example.soy")]
+      (is (= ["<b>Coda</b>" :html]
+             (render templates "example.test" {:name "Coda"}))))))
 
 (deftest parse-test
   (testing "Parsing a template without a cache"
