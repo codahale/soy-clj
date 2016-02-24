@@ -1,8 +1,10 @@
 (ns soy-clj.core-test
   (:require [clojure.core.cache :as cache]
+            [clojure.java.io :as io]
             [clojure.string :as string]
             [clojure.test :refer :all]
-            [soy-clj.core :refer :all :as soy-clj]))
+            [soy-clj.core :refer :all :as soy-clj])
+  (:import [com.google.template.soy SoyFileSet SoyFileSet$Builder]))
 
 (deftest content-type-test
   (testing "The content types of various kinds"
@@ -95,3 +97,15 @@
            (render (parse "example.soy") "examples.simple.helloName"
                    {:name (ordain-as-safe "Mr. <i>World<i>" :html)
                     :greeting-word "Bonjour"})))))
+
+(deftest builder-fn-test
+  (testing "the SoyFileSet$Builder factory function can be overridden"
+    (binding [*builder-fn* (fn [] (let [builder (SoyFileSet/builder)]
+                                    (.add builder (io/file "test/example.soy"))
+                                    builder))]
+      (is (= ["Hello, Mr. World!"
+              :text]
+             (render (parse-string "{namespace foo}" "foo.soy")
+                     "examples.simple.exampleText"
+                     {:name "Mr. World"}
+                     :text))))))
