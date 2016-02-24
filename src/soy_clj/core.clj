@@ -32,14 +32,16 @@
   "Use only the defaults for JS compilation."
   (SoyJsSrcOptions.))
 
+(def ^:dynamic *builder-fn* #(SoyFileSet/builder))
+
 (defn parse-string
   "Given a Closure template as a string, parses it and returns a compiled set of
   templates."
-  [template-str template-name]
-  (let [builder (SoyFileSet/builder)]
-    (.add builder ^String template-str ^String template-name)
-    (.setGeneralOptions builder opts)
-    (.compileToTofu (.build builder))))
+  ([template-str template-name]
+   (let [builder (*builder-fn*)]
+     (.add builder ^String template-str ^String template-name)
+     (.setGeneralOptions builder opts)
+     (.compileToTofu (.build builder)))))
 
 (defn- add-file
   [^SoyFileSet$Builder builder ^String file]
@@ -50,7 +52,7 @@
 (defn- ^SoyFileSet build
   "Builds a fileset from the given files."
   [files]
-  (let [builder (SoyFileSet/builder)]
+  (let [builder (*builder-fn*)]
     (run! (partial add-file builder) files)
     (.setGeneralOptions builder opts)
     (.build builder)))
