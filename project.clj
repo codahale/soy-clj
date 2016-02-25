@@ -6,9 +6,9 @@
   :dependencies [[org.clojure/core.cache "0.6.4"]
                  [com.google.template/soy "2015-04-10"
                   :exclusions [args4j]]]
-  :profiles {:dev {:dependencies [[org.clojure/clojure "1.8.0-RC2"]
-                                  [criterium "0.4.3"]]}}
-  :plugins [[codox "0.9.0"]]
+  :profiles {:dev {:dependencies [[org.clojure/clojure "1.8.0"]
+                                  [criterium "0.4.4"]]}}
+  :plugins [[codox "0.9.4"]]
   :test-selectors {:default #(not-any? % [:bench])
                    :bench   :bench}
   :aliases {"bench" ["test" ":bench"]}
