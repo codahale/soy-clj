@@ -17,7 +17,6 @@
   (testing "Cleaning an HTML string"
     (is (= (ordain-as-safe "<em>woo</em> woo();" :html)
            (clean-html "<em>woo</em> <li>woo();</li>"))))
-
   (testing "Cleaning an HTML string with optional safe tags"
     (is (= (ordain-as-safe "<em>woo</em> <span>woo();</span>" :html)
            (clean-html "<em>woo</em> <span>woo();</span>" :span)))))
@@ -26,7 +25,6 @@
   (testing "Compiling a missing template to Javascript"
     (is (thrown? IllegalArgumentException
                  (compile-to-js "bad.soy"))))
-
   (testing "Compiling templates to Javascript"
     (is (= (slurp "test/example.js")
            (compile-to-js "example.soy")))))
@@ -38,7 +36,6 @@
     (is (parse ["example.soy"]))
     (is (not (cache/has? @@#'soy-clj/template-cache "example.soy")))
     (is (cache/has? @@#'soy-clj/template-cache ["example.soy"])))
-
   (testing "Parsing a template without a cache"
     (is (parse "example.soy"))
     (is (parse ["example.soy"])))

@@ -141,7 +141,6 @@
   `<u>`. Additionally, the use of `<ul>`, `<ol>`, `<li>`, and `<span>` can be
   enabled by passing the symbols `:ul` etc. as additional arguments."
   [^String s & safe-tags]
-  (prn )
   (Sanitizers/cleanHtml s ^java.util.Collection
                         (vec (map #(TagWhitelist$OptionalSafeTag/fromTagName
                                     (name %)) safe-tags))))
