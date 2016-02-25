@@ -31,21 +31,6 @@
     (is (= (slurp "test/example.js")
            (compile-to-js "example.soy")))))
 
-(deftest parse-string-test
-  (testing "Parsing a string"
-    (let [templates (parse-string (string/join "\n"
-                                               ["{namespace example}"
-                                                "/**"
-                                                " * Does a thing."
-                                                " * @param name A name"
-                                                " */"
-                                                "{template .test kind=\"html\"}"
-                                                "<b>{$name}</b>"
-                                                "{/template}"])
-                                  "example.soy")]
-      (is (= ["<b>Coda</b>" :html]
-             (render templates "example.test" {:name "Coda"}))))))
-
 (deftest parse-test
   (testing "Parsing a template without a cache"
     (set-cache (cache/lu-cache-factory {}))
@@ -56,7 +41,26 @@
 
   (testing "Parsing a template without a cache"
     (is (parse "example.soy"))
-    (is (parse ["example.soy"]))))
+    (is (parse ["example.soy"])))
+  (testing "Overriding the builder"
+    (binding [*builder-fn* (fn [] (let [builder (SoyFileSet/builder)]
+                                    (.add builder (io/file "test/example.soy"))
+                                    builder))]
+      (is (= ["Hello, Mr. World!" :text]
+             (render (parse "other-example.soy") "examples.simple.exampleText"
+                     {:name "Mr. World"}
+                     :text)))))
+  (testing "Preprocessing a template"
+    (set-cache (cache/lu-cache-factory {}))
+    (binding [*preprocessor-fn* #(str %
+                                      "\n\n"
+                                      (->> (slurp "test/other-example.soy")
+                                           (string/split-lines)
+                                           (drop 1)
+                                           (string/join "\n")))]
+      (is (= ["Yes, boss." :html]
+             (render (parse "example.soy") "examples.simple.addition"
+                     {:name "boss"}))))))
 
 (deftest render-test
   (testing "Rendering a template"
@@ -97,15 +101,3 @@
            (render (parse "example.soy") "examples.simple.helloName"
                    {:name (ordain-as-safe "Mr. <i>World<i>" :html)
                     :greeting-word "Bonjour"})))))
-
-(deftest builder-fn-test
-  (testing "the SoyFileSet$Builder factory function can be overridden"
-    (binding [*builder-fn* (fn [] (let [builder (SoyFileSet/builder)]
-                                    (.add builder (io/file "test/example.soy"))
-                                    builder))]
-      (is (= ["Hello, Mr. World!"
-              :text]
-             (render (parse-string "{namespace foo}" "foo.soy")
-                     "examples.simple.exampleText"
-                     {:name "Mr. World"}
-                     :text))))))

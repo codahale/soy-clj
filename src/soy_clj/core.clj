@@ -36,19 +36,14 @@
   "The function used to create a SoyFileSet$Builder."
   #(SoyFileSet/builder))
 
-(defn parse-string
-  "Given a Closure template as a string, parses it and returns a compiled set of
-  templates."
-  ([template-str template-name]
-   (let [^SoyFileSet$Builder builder (*builder-fn*)]
-     (.add builder ^String template-str ^String template-name)
-     (.setGeneralOptions builder opts)
-     (.compileToTofu (.build builder)))))
+(def ^:dynamic *preprocessor-fn*
+  "The function used to pre-process the template contents."
+  identity)
 
 (defn- add-file
   [^SoyFileSet$Builder builder ^String file]
   (if-let [res (io/resource file)]
-    (.add  builder res file)
+    (.add builder ^String (*preprocessor-fn* (slurp res)) file)
     (throw (IllegalArgumentException. (str "Unable to open " file)))))
 
 (defn- ^SoyFileSet build
