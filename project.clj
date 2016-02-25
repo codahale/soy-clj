@@ -6,12 +6,18 @@
   :dependencies [[org.clojure/core.cache "0.6.4"]
                  [com.google.template/soy "2016-01-12"
                   :exclusions [args4j]]]
-  :profiles {:dev {:dependencies [[org.clojure/clojure "1.8.0"]
-                                  [criterium "0.4.4"]]}}
   :plugins [[codox "0.9.4"]]
   :test-selectors {:default #(not-any? % [:bench])
                    :bench   :bench}
   :aliases {"bench" ["test" ":bench"]}
   :deploy-repositories [["releases" :clojars]
                         ["snapshots" :clojars]]
-  :global-vars {*warn-on-reflection* true})
+  :global-vars {*warn-on-reflection* true}
+  :profiles {:dev [:project/dev :profiles/dev]
+             :test [:project/test :profiles/test]
+             :profiles/dev {:dependencies [[org.clojure/clojure "1.8.0"]
+                                           [criterium "0.4.4"]]}
+             :profiles/test {}
+             :project/dev {:source-paths ["dev"]
+                           :repl-options {:init-ns user}}
+             :project/test {:dependencies []}})
