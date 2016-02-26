@@ -107,6 +107,7 @@
    SanitizedContent$ContentKind/HTML :html
    SanitizedContent$ContentKind/JS :js
    SanitizedContent$ContentKind/TEXT :text
+   SanitizedContent$ContentKind/TRUSTED_RESOURCE_URI :trusted-resource-uri
    SanitizedContent$ContentKind/URI :uri})
 
 (def ^:private content-kind-enum
