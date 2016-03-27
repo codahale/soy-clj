@@ -27,15 +27,15 @@
                  (compile-to-js "bad.soy"))))
   (testing "Compiling templates to Javascript"
     (is (= (slurp "test/example.js")
-           (compile-to-js "example.soy")))))
+           (compile-to-js "example.soy")))
+    (is (cache/has? @@#'soy-clj/cache [:js ["example.soy"]]))))
 
 (deftest parse-test
   (testing "Parsing a template without a cache"
     (set-cache (cache/lu-cache-factory {}))
     (is (parse "example.soy"))
     (is (parse ["example.soy"]))
-    (is (not (cache/has? @@#'soy-clj/template-cache "example.soy")))
-    (is (cache/has? @@#'soy-clj/template-cache ["example.soy"])))
+    (is (cache/has? @@#'soy-clj/cache [:tofu ["example.soy"]])))
   (testing "Parsing a template without a cache"
     (is (parse "example.soy"))
     (is (parse ["example.soy"])))

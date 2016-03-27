@@ -14,14 +14,14 @@
                                                       TagWhitelist$OptionalSafeTag)
            (com.google.template.soy.tofu SoyTofu)))
 
-(def ^:private template-cache
-  "Default to keeping the 32 most-used templates in cache."
+(def ^:private cache
+  "Default to keeping the 32 most-used templates or JS in cache."
   (atom (cache/lu-cache-factory {})))
 
 (defn set-cache
-  "Sets the cache for parsed templates."
-  [cache]
-  (reset! template-cache cache))
+  "Sets the cache for parsed templates and compiled JS."
+  [cache-impl]
+  (reset! cache cache-impl))
 
 (def ^:private opts
   "Default to requiring autoescaped templates."
@@ -54,12 +54,21 @@
     (.setGeneralOptions builder opts)
     (.build builder)))
 
+(def ^:private prelude
+  "A bit of required JS."
+  "if(typeof goog == 'undefined') {var goog = {};}")
+
 (defn compile-to-js
   "Compile the given set of templates to Javascript."
   [file-or-files]
-  (->> (.compileToJsSrc (build (flatten (vector file-or-files))) js-opts nil)
-       (cons "if(typeof goog == 'undefined') {var goog = {};}")
-       (string/join "\n")))
+  (let [files (flatten (vector file-or-files))]
+    (if-let [found (cache/lookup @cache [:js files])]
+      found
+      (let [js (->> (.compileToJsSrc (build files) js-opts nil)
+                    (cons prelude)
+                    (string/join "\n"))]
+        (swap! cache assoc [:js files] js)
+        js))))
 
 (defn- parse-uncached
   "Returns a compiled set of templates from the given files."
@@ -71,10 +80,10 @@
   classpath, parses the templates and returns a compiled set of templates."
   [file-or-files]
   (let [files (vec (flatten (vector file-or-files)))]
-    (if-let [found (cache/lookup @template-cache files)]
+    (if-let [found (cache/lookup @cache [:tofu files])]
       found
       (let [templates (parse-uncached files)]
-        (swap! template-cache assoc files templates)
+        (swap! cache assoc [:tofu files] templates)
         templates))))
 
 (defn- camel-case
