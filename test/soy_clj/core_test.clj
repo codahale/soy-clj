@@ -37,6 +37,8 @@
     (is (parse "example.soy"))
     (is (parse ["example.soy"]))
     (is (cache/has? @@#'soy-clj/cache [:tofu ["example.soy"]])))
+  (testing "Parsing a template from a resource"
+    (is (parse (io/resource "example.soy"))))
   (testing "Overriding the builder"
     (binding [*builder-fn* (fn [] (let [builder (SoyFileSet/builder)]
                                     (.add builder (io/file "test/example.soy"))

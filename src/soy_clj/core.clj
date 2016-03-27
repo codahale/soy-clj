@@ -5,7 +5,8 @@
             [clojure.set :as set]
             [clojure.string :as string]
             [clojure.walk :as walk])
-  (:import (com.google.template.soy SoyFileSet SoyFileSet$Builder)
+  (:import (java.net URL)
+           (com.google.template.soy SoyFileSet SoyFileSet$Builder)
            (com.google.template.soy.data SanitizedContent$ContentKind
                                          UnsafeSanitizedContentOrdainer)
            (com.google.template.soy.jssrc SoyJsSrcOptions)
@@ -41,9 +42,9 @@
   identity)
 
 (defn- add-file
-  [^SoyFileSet$Builder builder ^String file]
-  (if-let [res (io/resource file)]
-    (.add builder ^String (*preprocessor-fn* (slurp res)) file)
+  [^SoyFileSet$Builder builder file]
+  (if-let [res (if (instance? URL file) file (io/resource file))]
+    (.add builder ^String (*preprocessor-fn* (slurp res)) (str file))
     (throw (IllegalArgumentException. (str "Unable to open " file)))))
 
 (defn- ^SoyFileSet build
