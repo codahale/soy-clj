@@ -26,6 +26,7 @@
     (is (thrown? IllegalArgumentException
                  (compile-to-js "bad.soy"))))
   (testing "Compiling templates to Javascript"
+    (set-cache (cache/lu-cache-factory {}))
     (is (= (slurp "test/example.js")
            (compile-to-js "example.soy")))
     (is (cache/has? @@#'soy-clj/cache [:js ["example.soy"]]))))
@@ -36,9 +37,6 @@
     (is (parse "example.soy"))
     (is (parse ["example.soy"]))
     (is (cache/has? @@#'soy-clj/cache [:tofu ["example.soy"]])))
-  (testing "Parsing a template without a cache"
-    (is (parse "example.soy"))
-    (is (parse ["example.soy"])))
   (testing "Overriding the builder"
     (binding [*builder-fn* (fn [] (let [builder (SoyFileSet/builder)]
                                     (.add builder (io/file "test/example.soy"))
