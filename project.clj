@@ -3,7 +3,7 @@
   :url "https://github.com/codahale/soy-clj"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
-  :dependencies [[org.clojure/core.cache "0.6.4"]
+  :dependencies [[org.clojure/core.cache "0.6.5"]
                  [com.google.template/soy "2016-01-12"
                   :exclusions [args4j]]]
   :plugins [[codox "0.9.4"]]
