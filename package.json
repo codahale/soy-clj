@@ -1,0 +1,27 @@
+{
+  "name": "soy-clj",
+  "version": "1.0.0",
+  "description": "![Build Status](https://travis-ci.org/codahale/soy-clj.svg)",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/codahale/soy-clj.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/codahale/soy-clj/issues"
+  },
+  "homepage": "https://github.com/codahale/soy-clj#readme",
+  "dependencies": {
+    "google-closure-compiler": "20160315.2.0",
+    "google-closure-library": "20160315.0.0",
+    "google-closure-templates": "20150410.0.0"
+  }
+}
