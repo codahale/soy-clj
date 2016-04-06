@@ -4,7 +4,21 @@
             [clojure.string :as string]
             [clojure.test :refer :all]
             [soy-clj.core :refer :all :as soy-clj])
-  (:import [com.google.template.soy SoyFileSet SoyFileSet$Builder]))
+  (:import [com.google.template.soy SoyFileSet SoyFileSet$Builder]
+           [com.google.template.soy.data SanitizedContent]
+           [com.google.template.soy.jssrc.restricted JsExpr]))
+
+(deftest ordain-as-safe-test
+  (let [jsexpr (JsExpr. "'<foo>'" Integer/MAX_VALUE)]
+    (testing "marks html js expressions safe"
+      (is (= "soydata.VERY_UNSAFE.ordainSanitizedHtml('<foo>')"
+             (.getText (ordain-as-safe jsexpr :html))))))
+
+  (testing "marks html safe"
+    (is (instance? SanitizedContent (ordain-as-safe "<i></i>" :html))))
+
+  (testing "renders safe html properly"
+    (is (= "<i></i>" (.getContent (ordain-as-safe "<i></i>" :html))))))
 
 (deftest content-type-test
   (testing "The content types of various kinds"
