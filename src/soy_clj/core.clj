@@ -10,6 +10,7 @@
            (com.google.template.soy.data SanitizedContent$ContentKind
                                          UnsafeSanitizedContentOrdainer)
            (com.google.template.soy.jssrc SoyJsSrcOptions)
+           (com.google.template.soy.jssrc.restricted JsExpr JsExprUtils)
            (com.google.template.soy.shared SoyGeneralOptions)
            (com.google.template.soy.shared.restricted Sanitizers
                                                       TagWhitelist$OptionalSafeTag)
@@ -138,13 +139,24 @@
                     (renderStrict))]
     [(.getContent content) (content-kind (.getContentKind content))]))
 
+(defn- safe-str
+  [content kind]
+  (UnsafeSanitizedContentOrdainer/ordainAsSafe content (content-kind-enum kind)))
+
+(defn- safe-jsexpr
+  [content kind]
+  (JsExprUtils/maybeWrapAsSanitizedContent (content-kind-enum kind) content))
+
 (defn ordain-as-safe
   "Ordains the given content as safe content of the given kind which will not be
   escaped inside that kind's context. Use this sparingly, as it entirely
   bypasses Soy's XSS protection."
   [content kind]
-  (UnsafeSanitizedContentOrdainer/ordainAsSafe content
-                                               (content-kind-enum kind)))
+  (cond
+    (string? content)          (safe-str content kind)
+    (instance? JsExpr content) (safe-jsexpr content kind)
+    :else                      (throw (ex-info "Unrecognized content type"
+                                               {:content content :kind kind}))))
 
 (defn clean-html
   "Parses the given string as HTML and removes all tags except for basic
