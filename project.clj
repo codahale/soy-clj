@@ -6,7 +6,7 @@
   :dependencies [[org.clojure/core.cache "0.6.5"]
                  [com.google.template/soy "2016-01-12"
                   :exclusions [args4j]]]
-  :plugins [[codox "0.9.4"]]
+  :plugins [[codox "0.9.5"]]
   :test-selectors {:default #(not-any? % [:bench])
                    :bench   :bench}
   :aliases {"bench" ["test" ":bench"]}
