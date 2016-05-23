@@ -12,5 +12,6 @@ mkdir -p resources/META-INF/resources/webjars/soy-clj/$version
     --namespace="soydata" \
     --namespace="soy" \
     --output_mode=compiled \
+    --compiler_flags="--compilation_level=ADVANCED_OPTIMIZATIONS" \
     --compiler_jar=node_modules/google-closure-compiler/compiler.jar \
     > resources/META-INF/resources/webjars/soy-clj/$version/soyutils.js
