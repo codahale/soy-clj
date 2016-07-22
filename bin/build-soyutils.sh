@@ -1,5 +1,6 @@
 #!/bin/bash
 version="2016-07-21"
+rm -rf resources/META-INF/resources/webjars/soy-clj
 mkdir -p resources/META-INF/resources/webjars/soy-clj/$version
 closure-compiler \
     --js_output_file resources/META-INF/resources/webjars/soy-clj/$version/soyutils.js \
