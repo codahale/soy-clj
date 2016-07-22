@@ -4,21 +4,24 @@
             [clojure.string :as string]
             [clojure.test :refer :all]
             [soy-clj.core :refer :all :as soy-clj])
-  (:import [com.google.template.soy SoyFileSet SoyFileSet$Builder]
-           [com.google.template.soy.data SanitizedContent]
-           [com.google.template.soy.jssrc.restricted JsExpr]))
+  (:import (javax.script ScriptEngine ScriptEngineManager)
+           (com.google.template.soy SoyFileSet SoyFileSet$Builder)
+           (com.google.template.soy.data SanitizedContent
+                                         SanitizedContent$ConstantContent)
+           (com.google.template.soy.jssrc.restricted JsExpr)))
 
 (deftest ordain-as-safe-test
   (let [jsexpr (JsExpr. "'<foo>'" Integer/MAX_VALUE)]
     (testing "marks html js expressions safe"
       (is (= "soydata.VERY_UNSAFE.ordainSanitizedHtml('<foo>')"
-             (.getText (ordain-as-safe jsexpr :html))))))
+             (.getText ^JsExpr (ordain-as-safe jsexpr :html))))))
 
   (testing "marks html safe"
     (is (instance? SanitizedContent (ordain-as-safe "<i></i>" :html))))
 
   (testing "renders safe html properly"
-    (is (= "<i></i>" (.getContent (ordain-as-safe "<i></i>" :html))))))
+    (is (= "<i></i>" (.getContent ^SanitizedContent$ConstantContent
+                                  (ordain-as-safe "<i></i>" :html))))))
 
 (deftest content-type-test
   (testing "The content types of various kinds"
@@ -41,8 +44,12 @@
                  (compile-to-js "bad.soy"))))
   (testing "Compiling templates to Javascript"
     (set-cache (cache/lu-cache-factory {}))
-    (is (= (slurp "test/example.js")
-           (compile-to-js "example.soy")))
+    (let [js (.. (ScriptEngineManager.)
+                 (getEngineByName "nashorn"))]
+      (.eval js ^String (slurp "resources/META-INF/resources/webjars/soy-clj/2016-01-12/soyutils.js"))
+      (.eval js ^String (compile-to-js "example.soy"))
+      (is (= "Hello world!"
+             (.eval js "examples.simple.helloWorld().content"))))
     (is (cache/has? @@#'soy-clj/cache [:js ["example.soy"]]))))
 
 (deftest parse-test
