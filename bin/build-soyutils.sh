@@ -1,17 +1,52 @@
 #!/bin/bash
-npm --no-progress --no-color install
-
-# version=`npm --no-color info google-closure-templates version`
-version="2016-01-12"
-
+version="2016-07-21"
 mkdir -p resources/META-INF/resources/webjars/soy-clj/$version
-
-./node_modules/google-closure-library/closure/bin/build/closurebuilder.py \
-    --root=node_modules/google-closure-library \
-    --root=../closure-templates/javascript \
-    --namespace="goog.soy" \
-    --namespace="soydata" \
-    --namespace="soy" \
-    --output_mode=compiled \
-    --compiler_jar=node_modules/google-closure-compiler/compiler.jar \
-    > resources/META-INF/resources/webjars/soy-clj/$version/soyutils.js
+closure-compiler \
+    --js_output_file resources/META-INF/resources/webjars/soy-clj/$version/soyutils.js \
+    --js deps/closure-library/closure/goog/base.js \
+    --js deps/closure-library/closure/goog/fs/url.js \
+    --js deps/closure-library/closure/goog/dom/nodetype.js \
+    --js deps/closure-library/closure/goog/debug/error.js \
+    --js deps/closure-library/closure/goog/string/string.js \
+    --js deps/closure-library/closure/goog/asserts/asserts.js \
+    --js deps/closure-library/closure/goog/string/typedstring.js \
+    --js deps/closure-library/closure/goog/string/const.js \
+    --js deps/closure-library/closure/goog/i18n/bidi.js \
+    --js deps/closure-library/closure/goog/html/safeurl.js \
+    --js deps/closure-library/closure/goog/array/array.js \
+    --js deps/closure-library/closure/goog/html/safestyle.js \
+    --js deps/closure-library/closure/goog/html/safescript.js \
+    --js deps/closure-library/closure/goog/html/trustedresourceurl.js \
+    --js deps/closure-library/closure/goog/html/safestylesheet.js \
+    --js deps/closure-library/closure/goog/object/object.js \
+    --js deps/closure-library/closure/goog/dom/tags.js \
+    --js deps/closure-library/closure/goog/dom/tagname.js \
+    --js deps/closure-library/closure/goog/labs/useragent/util.js \
+    --js deps/closure-library/closure/goog/labs/useragent/browser.js \
+    --js deps/closure-library/closure/goog/html/safehtml.js \
+    --js deps/closure-library/closure/goog/html/uncheckedconversions.js \
+    --js deps/closure-library/closure/goog/soy/data.js \
+    --js deps/closure-library/closure/goog/html/legacyconversions.js \
+    --js deps/closure-library/closure/goog/labs/useragent/platform.js \
+    --js deps/closure-library/closure/goog/labs/useragent/engine.js \
+    --js deps/closure-library/closure/goog/useragent/useragent.js \
+    --js deps/closure-library/closure/goog/math/size.js \
+    --js deps/closure-library/closure/goog/dom/safe.js \
+    --js deps/closure-library/closure/goog/dom/browserfeature.js \
+    --js deps/closure-library/closure/goog/math/math.js \
+    --js deps/closure-library/closure/goog/math/coordinate.js \
+    --js deps/closure-library/closure/goog/dom/dom.js \
+    --js deps/closure-library/closure/goog/soy/soy.js \
+    --js deps/closure-library/closure/goog/string/stringbuffer.js \
+    --js deps/closure-library/closure/goog/structs/inversionmap.js \
+    --js deps/closure-library/closure/goog/i18n/graphemebreak.js \
+    --js deps/closure-library/closure/goog/format/format.js \
+    --js deps/closure-library/closure/goog/structs/collection.js \
+    --js deps/closure-library/closure/goog/structs/structs.js \
+    --js deps/closure-library/closure/goog/functions/functions.js \
+    --js deps/closure-library/closure/goog/iter/iter.js \
+    --js deps/closure-library/closure/goog/structs/map.js \
+    --js deps/closure-library/closure/goog/structs/set.js \
+    --js deps/closure-library/closure/goog/debug/debug.js \
+    --js deps/closure-library/closure/goog/i18n/bidiformatter.js \
+    --js deps/closure-templates/javascript/soyutils_usegoog.js
