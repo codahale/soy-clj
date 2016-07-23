@@ -5,7 +5,11 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/core.cache "0.6.5"]
                  [com.google.template/soy "2016-07-21"
-                  :exclusions [args4j]]]
+                  :exclusions [args4j
+                               com.google.gwt/gwt-user
+                               com.google.guava/guava-testlib
+                               org.json/json
+                               com.google.code.gson/gson]]]
   :plugins [[codox "0.9.5"]]
   :test-selectors {:default #(not-any? % [:bench])
                    :bench   :bench}
