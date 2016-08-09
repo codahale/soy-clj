@@ -24,11 +24,10 @@
                                   (ordain-as-safe "<i></i>" :html))))))
 
 (deftest content-type-test
-  (testing "The content types of various kinds"
-    (is (= "text/css; charset=utf-8" (content-type :css)))
-    (is (= "text/html; charset=utf-8" (content-type :html)))
-    (is (= "text/javascript; charset=utf-8" (content-type :js)))
-    (is (= "text/plain; charset=utf-8" (content-type :some-other-kind)))))
+  (is (= "text/css; charset=utf-8" (content-type :css)))
+  (is (= "text/html; charset=utf-8" (content-type :html)))
+  (is (= "text/javascript; charset=utf-8" (content-type :js)))
+  (is (= "text/plain; charset=utf-8" (content-type :some-other-kind))))
 
 (deftest clean-html-test
   (testing "Cleaning an HTML string"

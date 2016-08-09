@@ -22,17 +22,17 @@
 (deftest ^:bench render-big-bench
   (sep "Rendering (big list)")
   (let [templates (soy/parse "example.soy")
-        data {:items (vec (map str (range 1 1000)))}]
+        data      {:items (vec (map str (range 1 1000)))}]
     (c/bench (soy/render templates "examples.simple.list" data))))
 
 (deftest ^:bench render-small-bench
   (sep "Rendering (small list)")
   (let [templates (soy/parse "example.soy")
-        data {:items (vec (map str (range 1 50)))}]
+        data      {:items (vec (map str (range 1 50)))}]
     (c/bench (soy/render templates "examples.simple.list" data))))
 
 (deftest ^:bench render-simple-bench
   (sep "Rendering (simple)")
   (let [templates (soy/parse "example.soy")
-        data {:bar "bar"}]
+        data      {:bar "bar"}]
     (c/bench (soy/render templates "examples.simple.basic" data))))

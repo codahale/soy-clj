@@ -106,20 +106,20 @@
   "The MIME content-type of the given kind."
   [kind]
   (case kind
-    :css "text/css; charset=utf-8"
+    :css  "text/css; charset=utf-8"
     :html "text/html; charset=utf-8"
-    :js "text/javascript; charset=utf-8"
+    :js   "text/javascript; charset=utf-8"
     "text/plain; charset=utf-8"))
 
 (def ^:private content-kind
   "A map of ContentKind enums to happy little symbols."
-  {SanitizedContent$ContentKind/ATTRIBUTES :attributes
-   SanitizedContent$ContentKind/CSS :css
-   SanitizedContent$ContentKind/HTML :html
-   SanitizedContent$ContentKind/JS :js
-   SanitizedContent$ContentKind/TEXT :text
+  {SanitizedContent$ContentKind/ATTRIBUTES           :attributes
+   SanitizedContent$ContentKind/CSS                  :css
+   SanitizedContent$ContentKind/HTML                 :html
+   SanitizedContent$ContentKind/JS                   :js
+   SanitizedContent$ContentKind/TEXT                 :text
    SanitizedContent$ContentKind/TRUSTED_RESOURCE_URI :trusted-resource-uri
-   SanitizedContent$ContentKind/URI :uri})
+   SanitizedContent$ContentKind/URI                  :uri})
 
 (def ^:private content-kind-enum
   "A map of happy little symbols to ContentKind enums."
