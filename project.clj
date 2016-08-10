@@ -10,7 +10,7 @@
                                com.google.guava/guava-testlib
                                org.json/json
                                com.google.code.gson/gson]]]
-  :plugins [[codox "0.9.5"]]
+  :plugins []
   :test-selectors {:default #(not-any? % [:bench])
                    :bench   :bench}
   :aliases {"bench" ["test" ":bench"]}
