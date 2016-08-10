@@ -1,9 +1,8 @@
 #!/bin/bash
-version="2016-07-21"
-rm -rf resources/META-INF/resources/webjars/soy-clj
-mkdir -p resources/META-INF/resources/webjars/soy-clj/$version
+rm -rf resources/soy-clj
+mkdir -p resources/soy-clj
 closure-compiler \
-    --js_output_file resources/META-INF/resources/webjars/soy-clj/$version/soyutils.js \
+    --js_output_file resources/soy-clj/soyutils.js \
     --js deps/closure-library/closure/goog/base.js \
     --js deps/closure-library/closure/goog/fs/url.js \
     --js deps/closure-library/closure/goog/dom/nodetype.js \

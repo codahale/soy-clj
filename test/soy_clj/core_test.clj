@@ -45,7 +45,7 @@
     (set-cache (cache/lu-cache-factory {}))
     (let [js (.. (ScriptEngineManager.)
                  (getEngineByName "nashorn"))]
-      (.eval js ^String (slurp "resources/META-INF/resources/webjars/soy-clj/2016-07-21/soyutils.js"))
+      (.eval js ^String (slurp "resources/soy-clj/soyutils.js"))
       (.eval js ^String (compile-to-js "example.soy"))
       (is (= "Hello world!"
              (.eval js "examples.simple.helloWorld().content"))))
