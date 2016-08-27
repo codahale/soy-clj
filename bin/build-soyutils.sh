@@ -29,6 +29,7 @@ closure-compiler \
     --js deps/closure-library/closure/goog/html/legacyconversions.js \
     --js deps/closure-library/closure/goog/labs/useragent/platform.js \
     --js deps/closure-library/closure/goog/labs/useragent/engine.js \
+    --js deps/closure-library/closure/goog/reflect/reflect.js \
     --js deps/closure-library/closure/goog/useragent/useragent.js \
     --js deps/closure-library/closure/goog/math/size.js \
     --js deps/closure-library/closure/goog/dom/safe.js \
