@@ -4,7 +4,7 @@
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/core.cache "0.6.5"]
-                 [com.google.template/soy "2016-08-09"
+                 [com.google.template/soy "2016-08-25"
                   :exclusions [args4j
                                com.google.gwt/gwt-user
                                com.google.guava/guava-testlib
