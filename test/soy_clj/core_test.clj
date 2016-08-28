@@ -49,6 +49,17 @@
       (.eval js ^String (compile-to-js "example.soy"))
       (is (= "Hello world!"
              (.eval js "examples.simple.helloWorld().content"))))
+    (is (cache/has? @@#'soy-clj/cache [:js ["example.soy"]])))
+
+  (testing "Compiling cached templates to Javascript"
+    (set-cache (cache/lu-cache-factory {}))
+    (compile-to-js "example.soy")
+    (let [js (.. (ScriptEngineManager.)
+                 (getEngineByName "nashorn"))]
+      (.eval js ^String (slurp "resources/soy-clj/soyutils.js"))
+      (.eval js ^String (compile-to-js "example.soy"))
+      (is (= "Hello world!"
+             (.eval js "examples.simple.helloWorld().content"))))
     (is (cache/has? @@#'soy-clj/cache [:js ["example.soy"]]))))
 
 (deftest parse-test

@@ -61,32 +61,32 @@
   "if(typeof goog == 'undefined') {var goog = {};}")
 
 (defn compile-to-js
-  "Compile the given set of templates to Javascript."
+  "Given the filename (or a sequence of filenames) of a Closure template on the
+  classpath, parses the templates and returns them as compiled Javascript."
   [file-or-files]
-  (let [files (flatten (vector file-or-files))]
-    (if-let [found (cache/lookup @cache [:js files])]
-      found
-      (let [js (->> (.compileToJsSrc (build files) js-opts nil)
-                    (cons prelude)
-                    (string/join "\n"))]
-        (swap! cache assoc [:js files] js)
-        js))))
-
-(defn- parse-uncached
-  "Returns a compiled set of templates from the given files."
-  [files]
-  (.. (build files) (compileToTofu)))
+  (let [files (flatten (vector file-or-files))
+        k     [:js files]]
+    (if (cache/has? @cache k)
+      (cache/lookup (swap! cache cache/hit k) k)
+      (do
+        (let [js (->> (.compileToJsSrc (build files) js-opts nil)
+                      (cons prelude)
+                      (string/join "\n"))]
+          (swap! cache cache/miss k js)
+          js)))))
 
 (defn parse
   "Given the filename (or a sequence of filenames) of a Closure template on the
-  classpath, parses the templates and returns a compiled set of templates."
+  classpath, parses the templates and returns them as compiled JVM bytecode."
   [file-or-files]
-  (let [files (vec (flatten (vector file-or-files)))]
-    (if-let [found (cache/lookup @cache [:tofu files])]
-      found
-      (let [templates (parse-uncached files)]
-        (swap! cache assoc [:tofu files] templates)
-        templates))))
+  (let [files (vec (flatten (vector file-or-files)))
+        k     [:tofu files]]
+    (if (cache/has? @cache k)
+      (cache/lookup (swap! cache cache/hit k) k)
+      (do
+        (let [tofu (.. (build files) (compileToTofu))]
+          (swap! cache cache/miss k tofu)
+          tofu)))))
 
 (defn- camel-case
   "Converts a symbol like `:blah-blah` into a string like `blahBlah`."
