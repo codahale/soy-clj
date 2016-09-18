@@ -66,14 +66,15 @@
   [file-or-files]
   (let [files (flatten (vector file-or-files))
         k     [:js files]]
-    (if (cache/has? @cache k)
-      (cache/lookup (swap! cache cache/hit k) k)
+    (if-let [v (cache/lookup @cache k)]
       (do
-        (let [js (->> (.compileToJsSrc (build files) js-opts nil)
-                      (cons prelude)
-                      (string/join "\n"))]
-          (swap! cache cache/miss k js)
-          js)))))
+        (swap! cache cache/hit k)
+        v)
+      (let [js (->> (.compileToJsSrc (build files) js-opts nil)
+                    (cons prelude)
+                    (string/join "\n"))]
+        (swap! cache cache/miss k js)
+        js))))
 
 (defn parse
   "Given the filename (or a sequence of filenames) of a Closure template on the
@@ -81,12 +82,13 @@
   [file-or-files]
   (let [files (vec (flatten (vector file-or-files)))
         k     [:tofu files]]
-    (if (cache/has? @cache k)
-      (cache/lookup (swap! cache cache/hit k) k)
+    (if-let [v (cache/lookup @cache k)]
       (do
-        (let [tofu (.. (build files) (compileToTofu))]
-          (swap! cache cache/miss k tofu)
-          tofu)))))
+        (swap! cache cache/hit k)
+        v)
+      (let [tofu (.. (build files) (compileToTofu))]
+        (swap! cache cache/miss k tofu)
+        tofu))))
 
 (defn- camel-case
   "Converts a symbol like `:blah-blah` into a string like `blahBlah`."
