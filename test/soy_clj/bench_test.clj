@@ -1,6 +1,5 @@
 (ns soy-clj.bench-test
-  (:require [clojure.core.cache :as cache]
-            [clojure.test :refer :all]
+  (:require [clojure.test :refer :all]
             [criterium.core :as c]
             [soy-clj.core :as soy]))
 
@@ -10,12 +9,12 @@
 
 (deftest ^:bench parse-uncached-bench
   (sep "Parsing (uncached)")
-  (soy/set-cache (cache/ttl-cache-factory {} :ttl 0))
+  (soy/set-cache-options! {:disabled? true})
   (c/bench (soy/parse "example.soy")))
 
 (deftest ^:bench parse-cached-bench
   (sep "Parsing (cached)")
-  (soy/set-cache (cache/lu-cache-factory {}))
+  (soy/set-cache-options! {})
   (soy/parse "example.soy")
   (c/bench (soy/parse "example.soy")))
 

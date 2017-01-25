@@ -1,10 +1,10 @@
 (ns soy-clj.core
   "An idiomatic Clojure wrapper for Google Closure templates."
-  (:require [clojure.core.cache :as cache]
-            [clojure.java.io :as io]
+  (:require [clojure.java.io :as io]
             [clojure.set :as set]
             [clojure.string :as string]
-            [clojure.walk :as walk])
+            [clojure.walk :as walk]
+            [guava-cache-clj.core :as guava-cache])
   (:import (java.net URL)
            (com.google.template.soy SoyFileSet SoyFileSet$Builder)
            (com.google.template.soy.data SanitizedContent$ContentKind
@@ -15,15 +15,6 @@
            (com.google.template.soy.shared.restricted Sanitizers
                                                       TagWhitelist$OptionalSafeTag)
            (com.google.template.soy.tofu SoyTofu)))
-
-(def ^:private cache
-  "Default to keeping the 32 most-used templates or JS in cache."
-  (atom (cache/lu-cache-factory {})))
-
-(defn set-cache
-  "Sets the cache for parsed templates and compiled JS."
-  [cache-impl]
-  (reset! cache cache-impl))
 
 (def ^:private opts
   "Default to requiring autoescaped templates."
@@ -49,7 +40,7 @@
     (throw (IllegalArgumentException. (str "Unable to open " file)))))
 
 (defn- ^SoyFileSet build
-  "Builds a fileset from the given files."
+  "Builds a file set from the given files."
   [files]
   (let [^SoyFileSet$Builder builder (*builder-fn*)]
     (run! (partial add-file builder) files)
@@ -60,35 +51,35 @@
   "A bit of required JS."
   "if(typeof goog == 'undefined') {var goog = {};}")
 
+(defn- cache-loader
+  [[kind files]]
+  (case kind
+    :js   (->> (.compileToJsSrc (build files) js-opts nil)
+               (cons prelude)
+               (string/join "\n"))
+    :tofu (.. (build files) (compileToTofu))))
+
+(def ^:private cache
+  (atom nil))
+
+(defn set-cache-options!
+  "Sets the cache options for parsed templates and compiled JS."
+  [opts]
+  (reset! cache (guava-cache/build cache-loader opts)))
+
+(set-cache-options! {})
+
 (defn compile-to-js
   "Given the filename (or a sequence of filenames) of a Closure template on the
   classpath, parses the templates and returns them as compiled Javascript."
   [file-or-files]
-  (let [files (flatten (vector file-or-files))
-        k     [:js files]]
-    (if-let [v (cache/lookup @cache k)]
-      (do
-        (swap! cache cache/hit k)
-        v)
-      (let [js (->> (.compileToJsSrc (build files) js-opts nil)
-                    (cons prelude)
-                    (string/join "\n"))]
-        (swap! cache cache/miss k js)
-        js))))
+  (@cache [:js (vec (flatten (vector file-or-files)))]))
 
 (defn parse
   "Given the filename (or a sequence of filenames) of a Closure template on the
   classpath, parses the templates and returns them as compiled JVM bytecode."
   [file-or-files]
-  (let [files (vec (flatten (vector file-or-files)))
-        k     [:tofu files]]
-    (if-let [v (cache/lookup @cache k)]
-      (do
-        (swap! cache cache/hit k)
-        v)
-      (let [tofu (.. (build files) (compileToTofu))]
-        (swap! cache cache/miss k tofu)
-        tofu))))
+  (@cache [:tofu (vec (flatten (vector file-or-files)))]))
 
 (defn- camel-case
   "Converts a symbol like `:blah-blah` into a string like `blahBlah`."

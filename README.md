@@ -79,15 +79,16 @@ A simple template with a single variable takes ~4µs. To reproduce this, run any
 of the [criterium](https://github.com/hugoduncan/criterium) benchmarks in
 `soy-clj/bench-test` or run `lein bench` on the command line.
 
-`soy-clj` uses `core.cache` to cache compiled templates. By default it retains
-the 32 most-used templates in memory, which makes for fast rendering in
-production environments. For development environments, a TTL cache factory may
-be provided with a very low time-to-live so that templates are recompiled on
-every request:
+`soy-clj` uses Guava to cache compiled templates. By default it will cache every
+template for the lifetime of the process, which makes for fast rendering in
+production environments. For development environments, the cache can be disabled
+so that templates are recompiled on every request:
 
 ```clojure
-(soy-clj.core/set-cache (clojure.core.cache/ttl-cache-factory {} :ttl 0))
+(soy-clj.core/set-cache-options! {:disabled? true})
 ```
+
+More information on Guava cache parameters can be found [here](https://google.github.io/guava/releases/21.0/api/docs/com/google/common/cache/CacheBuilder.html).
 
 Parsing and compiling templates takes 10-100ms, which makes using live templates
 in development relatively painless.

@@ -1,9 +1,9 @@
-(defproject soy-clj "0.2.17-SNAPSHOT"
+(defproject soy-clj "0.3.0-SNAPSHOT"
   :description "An idiomatic Clojure wrapper for Google's Closure templating system."
   :url "https://github.com/codahale/soy-clj"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
-  :dependencies [[org.clojure/core.cache "0.6.5"]
+  :dependencies [[com.codahale/guava-cache-clj "0.1.0-SNAPSHOT"]
                  [com.google.template/soy "2016-08-25"
                   :exclusions [args4j
                                com.google.gwt/gwt-user

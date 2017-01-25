@@ -1,8 +1,8 @@
 (ns soy-clj.core-test
-  (:require [clojure.core.cache :as cache]
-            [clojure.java.io :as io]
+  (:require [clojure.java.io :as io]
             [clojure.string :as string]
             [clojure.test :refer :all]
+            [guava-cache-clj.core :as guava-cache]
             [soy-clj.core :refer :all :as soy-clj])
   (:import (javax.script ScriptEngine ScriptEngineManager)
            (com.google.template.soy SoyFileSet SoyFileSet$Builder)
@@ -41,18 +41,20 @@
   (testing "Compiling a missing template to Javascript"
     (is (thrown? IllegalArgumentException
                  (compile-to-js "bad.soy"))))
+
   (testing "Compiling templates to Javascript"
-    (set-cache (cache/lu-cache-factory {}))
+    (set-cache-options! {})
     (let [js (.. (ScriptEngineManager.)
                  (getEngineByName "nashorn"))]
       (.eval js ^String (slurp "resources/soy-clj/soyutils.js"))
       (.eval js ^String (compile-to-js "example.soy"))
       (is (= "Hello world!"
              (.eval js "examples.simple.helloWorld().content"))))
-    (is (cache/has? @@#'soy-clj/cache [:js ["example.soy"]])))
+    (is (= [[:js ["example.soy"]]]
+           (keys (guava-cache/cache->map @@#'soy-clj/cache)))))
 
   (testing "Compiling cached templates to Javascript"
-    (set-cache (cache/lu-cache-factory {}))
+    (set-cache-options! {})
     (compile-to-js "example.soy")
     (let [js (.. (ScriptEngineManager.)
                  (getEngineByName "nashorn"))]
@@ -60,14 +62,10 @@
       (.eval js ^String (compile-to-js "example.soy"))
       (is (= "Hello world!"
              (.eval js "examples.simple.helloWorld().content"))))
-    (is (cache/has? @@#'soy-clj/cache [:js ["example.soy"]]))))
+    (is (= [[:js ["example.soy"]]]
+           (keys (guava-cache/cache->map @@#'soy-clj/cache))))))
 
 (deftest parse-test
-  (testing "Parsing a template without a cache"
-    (set-cache (cache/lu-cache-factory {}))
-    (is (parse "example.soy"))
-    (is (parse ["example.soy"]))
-    (is (cache/has? @@#'soy-clj/cache [:tofu ["example.soy"]])))
   (testing "Parsing a template from a resource"
     (is (parse (io/resource "example.soy"))))
   (testing "Overriding the builder"
@@ -79,7 +77,7 @@
                      {:name "Mr. World"}
                      :text)))))
   (testing "Preprocessing a template"
-    (set-cache (cache/lu-cache-factory {}))
+    (set-cache-options! {})
     (binding [*preprocessor-fn* #(str %
                                       "\n\n"
                                       (->> (slurp "test/other-example.soy")
