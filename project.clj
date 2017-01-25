@@ -1,4 +1,4 @@
-(defproject soy-clj "0.3.0-SNAPSHOT"
+(defproject soy-clj "0.3.0"
   :description "An idiomatic Clojure wrapper for Google's Closure templating system."
   :url "https://github.com/codahale/soy-clj"
   :license {:name "Eclipse Public License"
