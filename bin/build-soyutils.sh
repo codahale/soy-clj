@@ -25,6 +25,8 @@ closure-compiler \
     --js deps/closure-library/closure/goog/labs/useragent/browser.js \
     --js deps/closure-library/closure/goog/html/safehtml.js \
     --js deps/closure-library/closure/goog/html/uncheckedconversions.js \
+    --js deps/closure-library/closure/goog/uri/utils.js \
+    --js deps/closure-library/closure/goog/uri/uri.js \
     --js deps/closure-library/closure/goog/soy/data.js \
     --js deps/closure-library/closure/goog/html/legacyconversions.js \
     --js deps/closure-library/closure/goog/labs/useragent/platform.js \
