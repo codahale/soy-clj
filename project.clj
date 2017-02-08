@@ -3,7 +3,7 @@
   :url "https://github.com/codahale/soy-clj"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
-  :dependencies [[com.codahale/guava-cache-clj "0.1.1"]
+  :dependencies [[com.codahale/guava-cache-clj "0.1.2"]
                  [com.google.template/soy "2017-02-01"
                   :exclusions [args4j
                                com.google.gwt/gwt-user
